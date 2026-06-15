@@ -6,6 +6,11 @@ const ALL_TOPICS = [
   ...ALGO_TOPICS_2,
 ];
 
+// ===== Merge English data =====
+ALL_TOPICS.forEach(t => {
+  if (EN_DATA && EN_DATA[t.id]) t.en = EN_DATA[t.id];
+});
+
 // ===== State =====
 let currentTopic = null;
 let currentTab   = 'concept';
@@ -215,31 +220,42 @@ function goHome() {
 // ===== Render Functions =====
 function renderConcept(t) {
   const c = t.concept;
-  const props = c.properties.map(p => `<li>${p}</li>`).join('');
+  const en = t.en || {};
+  const props = c.properties.map((p, i) => `
+    <li>
+      <span class="bi-zh">${p}</span>
+      ${en.properties && en.properties[i] ? `<span class="bi-en">${en.properties[i]}</span>` : ''}
+    </li>`).join('');
   return `
     <div class="block">
-      <div class="block-title">💬 核心概念</div>
-      <div class="callout callout-blue">${c.summary}</div>
+      <div class="block-title">💬 核心概念 <span class="section-en-label">Core Concept</span></div>
+      <div class="callout callout-blue bi-block">
+        <div class="bi-zh">${c.summary}</div>
+        ${en.summary ? `<div class="bi-en">${en.summary}</div>` : ''}
+      </div>
     </div>
     <div class="block">
-      <div class="block-title">💡 直觀比喻</div>
-      <div class="analogy-box">
+      <div class="block-title">💡 直觀比喻 <span class="section-en-label">Analogy</span></div>
+      <div class="analogy-box bi-block">
         <div class="analogy-emoji">🎯</div>
-        <div class="analogy-text">${c.analogy}</div>
+        <div class="analogy-text">
+          <span class="bi-zh">${c.analogy}</span>
+          ${en.analogy ? `<span class="bi-en">${en.analogy}</span>` : ''}
+        </div>
       </div>
     </div>
     ${c.visualization ? `<div class="block">
-      <div class="block-title">📊 視覺化</div>
+      <div class="block-title">📊 視覺化 <span class="section-en-label">Visualization</span></div>
       <div class="viz-pre">${escHtml(c.visualization)}</div>
     </div>` : ''}
     <div class="block">
-      <div class="block-title">📌 重要特性</div>
-      <ul class="prop-list">${props}</ul>
+      <div class="block-title">📌 重要特性 <span class="section-en-label">Key Properties</span></div>
+      <ul class="prop-list bilingual-list">${props}</ul>
     </div>
     <div class="block">
-      <div class="block-title">⏱ 時間 & 空間複雜度</div>
+      <div class="block-title">⏱ 時間 & 空間複雜度 <span class="section-en-label">Time & Space Complexity</span></div>
       <table class="cx-table">
-        <thead><tr><th>操作</th><th>時間複雜度</th><th>空間複雜度</th></tr></thead>
+        <thead><tr><th>操作 / Operation</th><th>時間複雜度 / Time</th><th>空間複雜度 / Space</th></tr></thead>
         <tbody>
           ${t.complexity.map(row => `<tr>
             <td>${row.op}</td>
@@ -248,7 +264,10 @@ function renderConcept(t) {
           </tr>`).join('')}
         </tbody>
       </table>
-      ${t.complexityNote ? `<p class="cx-note">* ${t.complexityNote}</p>` : ''}
+      ${t.complexityNote ? `<p class="cx-note">
+        <span class="bi-zh">* ${t.complexityNote}</span>
+        ${en.complexityNote ? `<span class="bi-en">* ${en.complexityNote}</span>` : ''}
+      </p>` : ''}
     </div>`;
 }
 
@@ -265,50 +284,61 @@ function renderCode(t) {
       </div>
     </div>
     <div class="callout callout-purple">
-      <b>💡 面試提示</b>
-      Python 中背熟這些核心操作的寫法，面試時能快速寫出乾淨的程式碼。不需死記所有細節，理解邏輯更重要。
+      <b>💡 面試提示 / Interview Tips</b><br>
+      <span class="bi-zh">Python 中背熟這些核心操作的寫法，面試時能快速寫出乾淨的程式碼。不需死記所有細節，理解邏輯更重要。</span>
+      <span class="bi-en">Memorize the core Python operations shown here so you can write clean code quickly during interviews. Understanding the logic matters more than memorizing every detail.</span>
     </div>`;
 }
 
 function renderInterview(t) {
   const iv = t.interview;
+  const en = t.en ? t.en.interview : null;
+  const biItem = (zh, enArr, i) => `
+    <li>
+      <span class="bi-zh">${zh}</span>
+      ${enArr && enArr[i] ? `<span class="bi-en">${enArr[i]}</span>` : ''}
+    </li>`;
   return `
     <div class="tip-cards">
       <div class="tip-card">
-        <h4>🎯 面試通常怎麼考？</h4>
-        <ul>${iv.howAsked.map(x => `<li>${x}</li>`).join('')}</ul>
+        <h4>🎯 面試通常怎麼考？ <span class="card-en-label">How It's Tested</span></h4>
+        <ul class="bilingual-list">${iv.howAsked.map((x,i) => biItem(x, en && en.howAsked, i)).join('')}</ul>
       </div>
       <div class="tip-card">
-        <h4>🔑 核心解題模式</h4>
-        <ul>${iv.patterns.map(x => `<li>${x}</li>`).join('')}</ul>
+        <h4>🔑 核心解題模式 <span class="card-en-label">Key Patterns</span></h4>
+        <ul class="bilingual-list">${iv.patterns.map((x,i) => biItem(x, en && en.patterns, i)).join('')}</ul>
       </div>
       <div class="tip-card">
-        <h4>⚠️ 常見陷阱 & 注意事項</h4>
-        <ul>${iv.watchOut.map(x => `<li>${x}</li>`).join('')}</ul>
+        <h4>⚠️ 常見陷阱 & 注意事項 <span class="card-en-label">Watch Out</span></h4>
+        <ul class="bilingual-list">${iv.watchOut.map((x,i) => biItem(x, en && en.watchOut, i)).join('')}</ul>
       </div>
     </div>
     <div class="callout callout-green" style="margin-top:16px">
-      <b>🗣️ 面試溝通技巧</b>
-      面試時先大聲說出思路：「我想用 ${t.titleEn} 來解這道題，因為…」讓面試官了解你的思考過程，比沉默 coding 更好。
+      <b>🗣️ 面試溝通技巧 / Communication Tips</b><br>
+      <span class="bi-zh">面試時先大聲說出思路：「我想用 ${t.titleEn} 來解這道題，因為…」讓面試官了解你的思考過程，比沉默 coding 更好。</span>
+      <span class="bi-en">Always verbalize your reasoning: "I'm thinking of using ${t.titleEn} here because…" — letting the interviewer follow your thought process is far better than silent coding.</span>
     </div>`;
 }
 
 function renderVariations(t) {
+  const enVars = t.en && t.en.variations;
   return `
     <div class="block">
-      <div class="block-title">🔀 常見變形與延伸</div>
+      <div class="block-title">🔀 常見變形與延伸 <span class="section-en-label">Common Variations</span></div>
       <div class="var-list">
-        ${t.variations.map(v => `
+        ${t.variations.map((v, i) => `
           <div class="var-item">
             <h4>${v.name}</h4>
-            <p>${v.desc}</p>
+            <p class="bi-zh">${v.desc}</p>
+            ${enVars && enVars[i] ? `<p class="bi-en">${enVars[i]}</p>` : ''}
             <span class="var-ex">📎 例：${v.ex}</span>
           </div>`).join('')}
       </div>
     </div>
     <div class="callout callout-orange">
-      <b>💡 學習建議</b>
-      先掌握基本版本，再學習各種變形。面試時很少直接考基礎版，但熟悉基礎才能靈活應對變形題。
+      <b>💡 學習建議 / Study Tips</b><br>
+      <span class="bi-zh">先掌握基本版本，再學習各種變形。面試時很少直接考基礎版，但熟悉基礎才能靈活應對變形題。</span>
+      <span class="bi-en">Master the base version first, then explore variations. Interviews rarely test the pure basics — but solid fundamentals let you adapt to any variation.</span>
     </div>`;
 }
 
@@ -329,11 +359,17 @@ function renderQuiz(t) {
 }
 
 function renderQuizItem(topicId, q, qi, state) {
+  const t = ALL_TOPICS.find(x => x.id === topicId);
+  const enQ = t && t.en && t.en.quiz && t.en.quiz[qi];
   const isAnswered = state.answered.has(qi);
   const labels = ['A','B','C','D'];
   return `
     <div class="quiz-card" id="quiz-card-${topicId}-${qi}">
-      <div class="quiz-q-text"><span class="qnum">${qi+1}</span>${q.q}</div>
+      <div class="quiz-q-text">
+        <span class="qnum">${qi+1}</span>
+        <span class="bi-zh">${q.q}</span>
+        ${enQ ? `<span class="bi-en quiz-q-en">${enQ.q}</span>` : ''}
+      </div>
       <div class="quiz-opts">
         ${q.opts.map((opt, oi) => {
           let cls = '';
@@ -344,12 +380,14 @@ function renderQuizItem(topicId, q, qi, state) {
           return `<button class="quiz-opt ${cls} ${isAnswered?'disabled':''}"
             onclick="${isAnswered?'':'`answerQuiz(\''+topicId+'\','+qi+','+oi+')`'}">
             <span class="opt-label">${labels[oi]}</span>
-            ${opt}
+            <span class="bi-zh">${opt}</span>
+            ${enQ && enQ.opts && enQ.opts[oi] ? `<span class="bi-en">${enQ.opts[oi]}</span>` : ''}
           </button>`;
         }).join('')}
       </div>
       <div id="quiz-exp-${topicId}-${qi}" class="quiz-exp ${isAnswered?'show':''}">
-        💡 ${q.explanation}
+        💡 <span class="bi-zh">${q.exp}</span>
+        ${enQ ? `<span class="bi-en">${enQ.exp}</span>` : ''}
       </div>
     </div>`;
 }
@@ -401,25 +439,29 @@ function scoreMsg(score, total) {
 }
 
 function renderLeetcode(t) {
+  const enNotes = t.en && t.en.lcNotes;
   return `
     <div class="block">
-      <div class="block-title">🟠 LeetCode 精選 ${t.leetcode.length} 題</div>
+      <div class="block-title">🟠 LeetCode 精選 ${t.leetcode.length} 題 <span class="section-en-label">Curated Problems</span></div>
       <div class="lc-list">
-        ${t.leetcode.map(p => `
+        ${t.leetcode.map((p, i) => `
           <div class="lc-item">
             <div class="lc-no">#${p.no}</div>
             <div class="lc-info">
               <div class="lc-title"><a href="${p.url}" target="_blank" rel="noopener">${p.title} ↗</a></div>
-              <div class="lc-note">${p.note}</div>
+              <div class="lc-note">
+                <span class="bi-zh">${p.note}</span>
+                ${enNotes && enNotes[i] ? `<span class="bi-en">${enNotes[i]}</span>` : ''}
+              </div>
             </div>
             <span class="lc-diff d-${p.diff}">${p.diff}</span>
           </div>`).join('')}
       </div>
     </div>
     <div class="callout callout-orange">
-      <b>📋 刷題建議</b>
-      先把 Easy 全部做完，理解解法後再挑 Medium。Hard 題在理解前面概念後自然會有思路。
-      建議搭配 NeetCode 的解題影片，效果更好！
+      <b>📋 刷題建議 / Study Strategy</b><br>
+      <span class="bi-zh">先把 Easy 全部做完，理解解法後再挑 Medium。Hard 題在理解前面概念後自然會有思路。建議搭配 NeetCode 的解題影片，效果更好！</span>
+      <span class="bi-en">Complete all Easy problems first, then tackle Medium once you understand the patterns. Hard problems become approachable after mastering the fundamentals. Pair with NeetCode videos for best results!</span>
     </div>`;
 }
 
