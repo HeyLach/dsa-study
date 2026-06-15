@@ -1,0 +1,6 @@
+serve.log
+serve.err
+*.log
+*.err
+.DS_Store
+Thumbs.db

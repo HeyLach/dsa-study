@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DSA 學習中心 — SWE 面試準備</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+</head>
+<body>
+
+<!-- ===== Header ===== -->
+<header class="header">
+  <button class="icon-btn menu-btn" style="display:none" aria-label="選單">☰</button>
+  <div class="header-logo">
+    <span class="logo-icon">🧠</span>
+    DSA 學習中心
+  </div>
+  <div class="header-search">
+    <span class="search-icon">🔍</span>
+    <input id="search-input" type="text" placeholder="搜尋主題、關鍵字…" autocomplete="off">
+  </div>
+  <div class="header-right">
+    <span class="progress-chip" id="progress-chip">📈 0/17</span>
+    <button id="theme-btn" class="icon-btn" title="切換深色模式">🌙</button>
+  </div>
+</header>
+
+<!-- ===== Layout ===== -->
+<div class="app-layout">
+
+  <!-- Sidebar -->
+  <div class="sidebar-overlay"></div>
+  <nav class="sidebar" id="sidebar">
+    <!-- Built by JS -->
+  </nav>
+
+  <!-- Main -->
+  <main class="main-content">
+
+    <!-- Home Page -->
+    <div id="home-page">
+      <div class="home-hero">
+        <h1>🧠 Data Structures & Algorithms</h1>
+        <p>涵蓋 9 種資料結構 + 8 種演算法，每個主題包含概念解說、程式碼、面試技巧、小測試和 LeetCode 精選題單，幫你系統化準備 SWE 面試。</p>
+        <div class="stats-row">
+          <div class="stat-pill"><b>17</b>主題</div>
+          <div class="stat-pill"><b>85+</b>小測試題</div>
+          <div class="stat-pill"><b>170</b>LeetCode 題</div>
+          <div class="stat-pill"><b>∞</b>免費開放</div>
+        </div>
+      </div>
+
+      <div class="section-h">📦 資料結構（9 個主題）</div>
+      <div class="topic-grid" id="ds-grid">
+        <!-- Built by JS -->
+      </div>
+
+      <div class="section-h">⚙️ 演算法（8 個主題）</div>
+      <div class="topic-grid" id="algo-grid">
+        <!-- Built by JS -->
+      </div>
+
+      <!-- Quick Guide -->
+      <div style="display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));margin-top:8px">
+        <div class="callout callout-blue">
+          <b>🗺️ 建議學習路線</b>
+          Array → Linked List → Stack → Queue → Hash Table → Tree → Heap → Graph → Trie<br>
+          然後：排序 → 二元搜尋 → BFS/DFS → DP → 貪婪 → 回溯 → 雙指針 → 滑動視窗
+        </div>
+        <div class="callout callout-green">
+          <b>🎯 面試準備策略</b>
+          每個主題：1) 理解概念 2) 手寫程式碼 3) 完成小測試 4) 刷完 LeetCode Easy 和 Medium<br>
+          推薦搭配 NeetCode 150 題單，3 個月可完成
+        </div>
+        <div class="callout callout-purple">
+          <b>⚡ 使用說明</b>
+          點選任一主題卡片開始學習。完成後點「標記為已學習」追蹤進度。支援🌙深色模式。<br>
+          右上角顯示整體學習進度。
+        </div>
+      </div>
+    </div>
+
+    <!-- Topic Page -->
+    <div id="topic-page" style="display:none">
+      <!-- Built by JS -->
+    </div>
+
+    <!-- Search Page -->
+    <div id="search-page" style="display:none">
+      <!-- Built by JS -->
+    </div>
+
+  </main>
+</div>
+
+<!-- Scripts: data files first, then app logic -->
+<script src="js/data-ds.js"></script>
+<script src="js/data-ds2.js"></script>
+<script src="js/data-algo.js"></script>
+<script src="js/data-algo2.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+﻿{"version":"0.0.1","configurations":[{"name":"dsa-study","runtimeExecutable":"npx","runtimeArgs":["serve",".","-p","7788","--no-clipboard"],"port":7788}]}
