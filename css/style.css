@@ -283,6 +283,51 @@ code, pre { font-family: var(--mono); }
 mark { background: #fef08a; color: #1e293b; border-radius: 2px; }
 [data-theme="dark"] mark { background: #854d0e; color: #fef9c3; }
 
+/* ===== Detail Pattern Cards ===== */
+.detail-cards { display: flex; flex-direction: column; gap: 16px; }
+.detail-card {
+  border: 1.5px solid var(--border); border-radius: var(--radius);
+  background: var(--bg2); overflow: hidden;
+}
+.detail-card-header {
+  padding: 12px 16px 10px; border-bottom: 1px solid var(--border);
+  background: var(--bg3); display: flex; flex-direction: column; gap: 2px;
+}
+.detail-tag {
+  font-size: .68rem; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .07em; color: var(--primary); margin-bottom: 2px;
+}
+.detail-title {
+  font-size: .92rem; font-weight: 700; color: var(--text); line-height: 1.4;
+}
+.detail-title-en {
+  font-size: .78rem; color: var(--text3); font-style: italic;
+}
+.detail-desc {
+  padding: 10px 16px 0; font-size: .875rem; color: var(--text2);
+  line-height: 1.65; margin: 0;
+}
+.detail-code-wrap {
+  margin: 10px 0 0; border-top: 1px solid var(--border);
+}
+.detail-code-wrap .code-header { border-radius: 0; }
+.detail-code-wrap pre { margin: 0; border-radius: 0 0 var(--radius) var(--radius); max-height: 340px; overflow-y: auto; }
+
+/* Variation with code */
+.var-item-expanded { border: 1.5px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.var-item-expanded h4 { padding: 12px 16px 0; }
+.var-item-expanded p, .var-item-expanded .var-ex { padding: 0 16px; }
+.var-detail {
+  margin: 6px 0 4px !important; font-size: .875rem; color: var(--text2);
+  line-height: 1.6; background: var(--primary-light);
+  border-left: 3px solid var(--primary);
+  padding: 8px 14px !important; border-radius: 0;
+}
+.var-code-wrap { margin-top: 10px; }
+.var-code-wrap .code-header { border-radius: 0; }
+.var-code-wrap pre { margin: 0; border-radius: 0; max-height: 320px; overflow-y: auto; }
+.var-item-expanded .var-ex { display: block; padding-bottom: 14px; }
+
 /* ===== Bilingual Styles ===== */
 .bi-zh { display: block; }
 .bi-en {

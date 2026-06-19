@@ -11,6 +11,11 @@ ALL_TOPICS.forEach(t => {
   if (EN_DATA && EN_DATA[t.id]) t.en = EN_DATA[t.id];
 });
 
+// ===== Merge detail data =====
+ALL_TOPICS.forEach(t => {
+  if (typeof DETAIL_DATA !== 'undefined' && DETAIL_DATA[t.id]) t.detail = DETAIL_DATA[t.id];
+});
+
 // ===== State =====
 let currentTopic = null;
 let currentTab   = 'concept';
@@ -293,11 +298,34 @@ function renderCode(t) {
 function renderInterview(t) {
   const iv = t.interview;
   const en = t.en ? t.en.interview : null;
+  const det = t.detail ? t.detail.patterns : null;
+
   const biItem = (zh, enArr, i) => `
     <li>
       <span class="bi-zh">${zh}</span>
       ${enArr && enArr[i] ? `<span class="bi-en">${enArr[i]}</span>` : ''}
     </li>`;
+
+  const patternCards = det ? iv.patterns.map((x, i) => {
+    const d = det[i] || {};
+    return `
+      <div class="detail-card">
+        <div class="detail-card-header">
+          <span class="detail-tag">Pattern ${i+1}</span>
+          <span class="bi-zh detail-title">${x}</span>
+          ${en && en.patterns && en.patterns[i] ? `<span class="bi-en detail-title-en">${en.patterns[i]}</span>` : ''}
+        </div>
+        ${d.detail ? `<p class="detail-desc">${d.detail}</p>` : ''}
+        ${d.code ? `<div class="detail-code-wrap">
+          <div class="code-header">
+            <span class="lang-label">Python</span>
+            <button class="copy-btn" onclick="copyCode(this)">複製</button>
+          </div>
+          <pre><code class="language-python">${escHtml(d.code)}</code></pre>
+        </div>` : ''}
+      </div>`;
+  }).join('') : '';
+
   return `
     <div class="tip-cards">
       <div class="tip-card">
@@ -305,14 +333,21 @@ function renderInterview(t) {
         <ul class="bilingual-list">${iv.howAsked.map((x,i) => biItem(x, en && en.howAsked, i)).join('')}</ul>
       </div>
       <div class="tip-card">
-        <h4>🔑 核心解題模式 <span class="card-en-label">Key Patterns</span></h4>
-        <ul class="bilingual-list">${iv.patterns.map((x,i) => biItem(x, en && en.patterns, i)).join('')}</ul>
-      </div>
-      <div class="tip-card">
-        <h4>⚠️ 常見陷阱 & 注意事項 <span class="card-en-label">Watch Out</span></h4>
+        <h4>⚠️ 常見陷阱 <span class="card-en-label">Watch Out</span></h4>
         <ul class="bilingual-list">${iv.watchOut.map((x,i) => biItem(x, en && en.watchOut, i)).join('')}</ul>
       </div>
     </div>
+
+    ${det ? `<div class="block" style="margin-top:18px">
+      <div class="block-title">🔑 核心解題模式 <span class="section-en-label">Key Patterns — with Code Templates</span></div>
+      <div class="detail-cards">${patternCards}</div>
+    </div>` : `<div class="tip-cards" style="margin-top:12px">
+      <div class="tip-card">
+        <h4>🔑 核心解題模式 <span class="card-en-label">Key Patterns</span></h4>
+        <ul class="bilingual-list">${iv.patterns.map((x,i) => biItem(x, en && en.patterns, i)).join('')}</ul>
+      </div>
+    </div>`}
+
     <div class="callout callout-green" style="margin-top:16px">
       <b>🗣️ 面試溝通技巧 / Communication Tips</b><br>
       <span class="bi-zh">面試時先大聲說出思路：「我想用 ${t.titleEn} 來解這道題，因為…」讓面試官了解你的思考過程，比沉默 coding 更好。</span>
@@ -322,17 +357,30 @@ function renderInterview(t) {
 
 function renderVariations(t) {
   const enVars = t.en && t.en.variations;
+  const detVars = t.detail ? t.detail.variations : null;
+
   return `
     <div class="block">
       <div class="block-title">🔀 常見變形與延伸 <span class="section-en-label">Common Variations</span></div>
       <div class="var-list">
-        ${t.variations.map((v, i) => `
-          <div class="var-item">
+        ${t.variations.map((v, i) => {
+          const d = detVars && detVars[i] ? detVars[i] : null;
+          return `
+          <div class="var-item ${d ? 'var-item-expanded' : ''}">
             <h4>${v.name}</h4>
             <p class="bi-zh">${v.desc}</p>
             ${enVars && enVars[i] ? `<p class="bi-en">${enVars[i]}</p>` : ''}
+            ${d && d.detail ? `<p class="var-detail">${d.detail}</p>` : ''}
             <span class="var-ex">📎 例：${v.ex}</span>
-          </div>`).join('')}
+            ${d && d.code ? `<div class="detail-code-wrap var-code-wrap">
+              <div class="code-header">
+                <span class="lang-label">Python</span>
+                <button class="copy-btn" onclick="copyCode(this)">複製</button>
+              </div>
+              <pre><code class="language-python">${escHtml(d.code)}</code></pre>
+            </div>` : ''}
+          </div>`;
+        }).join('')}
       </div>
     </div>
     <div class="callout callout-orange">
