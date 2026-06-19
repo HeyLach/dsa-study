@@ -4,6 +4,7 @@ const ALL_TOPICS = [
   ...DS_TOPICS_2,
   ...ALGO_TOPICS_1,
   ...ALGO_TOPICS_2,
+  ...ADVANCED_TOPICS,
 ];
 
 // ===== Merge English data =====
@@ -46,8 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ===== Sidebar =====
 function buildSidebar() {
-  const dsItems   = ALL_TOPICS.filter(t => t.category === 'ds');
-  const algoItems = ALL_TOPICS.filter(t => t.category === 'algo');
+  const dsItems       = ALL_TOPICS.filter(t => t.category === 'ds');
+  const algoItems     = ALL_TOPICS.filter(t => t.category === 'algo');
+  const advancedItems = ALL_TOPICS.filter(t => t.category === 'advanced');
 
   const sidebar = document.getElementById('sidebar');
   sidebar.innerHTML = `
@@ -58,6 +60,10 @@ function buildSidebar() {
     <div class="sidebar-group">
       <div class="sidebar-group-label">⚙️ 演算法</div>
       ${algoItems.map(t => navItem(t)).join('')}
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-group-label">⭐ 進階主題</div>
+      ${advancedItems.map(t => navItem(t)).join('')}
     </div>`;
 }
 
@@ -129,12 +135,17 @@ function showPage(name) {
 
 // ===== Home =====
 function buildHome() {
-  const dsItems   = ALL_TOPICS.filter(t => t.category === 'ds');
-  const algoItems = ALL_TOPICS.filter(t => t.category === 'algo');
+  const dsItems       = ALL_TOPICS.filter(t => t.category === 'ds');
+  const algoItems     = ALL_TOPICS.filter(t => t.category === 'algo');
+  const advancedItems = ALL_TOPICS.filter(t => t.category === 'advanced');
 
-  document.getElementById('ds-grid').innerHTML   = dsItems.map(topicCard).join('');
-  document.getElementById('algo-grid').innerHTML = algoItems.map(topicCard).join('');
+  document.getElementById('ds-grid').innerHTML       = dsItems.map(topicCard).join('');
+  document.getElementById('algo-grid').innerHTML     = algoItems.map(topicCard).join('');
+  document.getElementById('advanced-grid').innerHTML = advancedItems.map(topicCard).join('');
 }
+
+const CAT_LABEL = { ds: '資料結構', algo: '演算法', advanced: '進階主題' };
+const CAT_CLS   = { ds: 'cat-ds',   algo: 'cat-algo', advanced: 'cat-adv' };
 
 function topicCard(t) {
   const isDone = done.includes(t.id);
@@ -143,7 +154,7 @@ function topicCard(t) {
     <div class="card-title">${t.title}</div>
     <div class="card-en">${t.titleEn}</div>
     ${isDone ? '<span class="card-done">✓</span>' : ''}
-    <span class="card-cat ${t.category==='ds'?'cat-ds':'cat-algo'}">${t.category==='ds'?'資料結構':'演算法'}</span>
+    <span class="card-cat ${CAT_CLS[t.category]||'cat-algo'}">${CAT_LABEL[t.category]||t.category}</span>
   </div>`;
 }
 
@@ -160,12 +171,13 @@ function showTopic(id) {
   if (!quizState[id]) quizState[id] = { answered: new Set(), score: 0 };
 
   const diffTag  = {beginner:'tag-beg 基礎',intermediate:'tag-int 進階',advanced:'tag-adv 困難'}[t.difficulty] || '';
-  const catTag   = t.category === 'ds' ? 'tag-ds 資料結構' : 'tag-algo 演算法';
+  const catTagMap = { ds: 'tag-ds 資料結構', algo: 'tag-algo 演算法', advanced: 'tag-adv-cat 進階主題' };
+  const catTag   = catTagMap[t.category] || 'tag-algo 演算法';
   const isDone   = done.includes(id);
 
   document.getElementById('topic-page').innerHTML = `
     <div class="topic-breadcrumb">
-      <span class="bc-link" onclick="goHome()">首頁</span> › ${t.category==='ds'?'資料結構':'演算法'} › ${t.title}
+      <span class="bc-link" onclick="goHome()">首頁</span> › ${CAT_LABEL[t.category]||t.category} › ${t.title}
     </div>
     <div class="topic-header-row">
       <div class="topic-big-icon">${t.icon}</div>

@@ -121,6 +121,7 @@ code, pre { font-family: var(--mono); }
 .topic-card .card-cat { position: absolute; bottom: 10px; right: 10px; font-size: .65rem; font-weight: 700; padding: 2px 7px; border-radius: 10px; }
 .cat-ds { background: var(--blue-light); color: var(--blue); }
 .cat-algo { background: var(--primary-light); color: var(--primary); }
+.cat-adv { background: var(--yellow-light); color: var(--yellow); }
 
 /* ===== Topic Page ===== */
 .topic-breadcrumb { font-size: .8rem; color: var(--text3); margin-bottom: 10px; }
@@ -133,6 +134,7 @@ code, pre { font-family: var(--mono); }
 .tag { display: inline-flex; align-items: center; font-size: .72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
 .tag-ds { background: var(--blue-light); color: var(--blue); }
 .tag-algo { background: var(--primary-light); color: var(--primary); }
+.tag-adv-cat { background: var(--yellow-light); color: var(--yellow); }
 .tag-beg { background: var(--green-light); color: var(--green); }
 .tag-int { background: var(--orange-light); color: var(--orange); }
 .tag-adv { background: var(--red-light); color: var(--red); }
