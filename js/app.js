@@ -438,7 +438,7 @@ function renderQuizItem(topicId, q, qi, state) {
             else if (state[`picked_${qi}`] === oi) cls = 'wrong';
           }
           return `<button class="quiz-opt ${cls} ${isAnswered?'disabled':''}"
-            onclick="${isAnswered?'':'`answerQuiz(\''+topicId+'\','+qi+','+oi+')`'}">
+            onclick="${isAnswered?'':'answerQuiz(\''+topicId+'\','+qi+','+oi+')'}">
             <span class="opt-label">${labels[oi]}</span>
             <span class="bi-zh">${opt}</span>
             ${enQ && enQ.opts && enQ.opts[oi] ? `<span class="bi-en">${enQ.opts[oi]}</span>` : ''}
